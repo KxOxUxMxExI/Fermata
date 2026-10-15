@@ -11,11 +11,12 @@
 
 - ユーザーの認証解除後、スマホで試作版のフォルダー画面・Webブラウザを操作できた。7100番のKomenoTVを開き、480p HEVC表示と実際の放送映像の進行を短時間確認。音声の実聴は未実施。
 - 停車状態の800x480 / タッチなし / rotaryのDHU接続は成功。既存Fermata Autoの起動はサービスのアプリIDで照合できた。
-- 試作版は `Fermata Media Service` の音声用項目だけ表示・起動できた。動画用の `KomenoTV Auto` と試作版Mirrorは、DHUにもスマホのランチャーカスタマイズの表示・非表示一覧にも出なかった。車載Web動画・全画面の試験には到達していない。
+- 通常ランチャーには試作版の `Fermata Media Service` だけ表示。動画用の `KomenoTV Auto` と試作版Mirrorは、通常一覧とカスタマイズの表示・非表示一覧には出なかった。追加検証でアプリモードを「デベロッパー」にすると「すべての車両アプリ」が出現し、その診断一覧に `KomenoTV Auto` があった。そこから起動し、試作版CarServiceへのAndroid Auto接続をdumpsysで照合できた。
+- 診断一覧から起動した試作版で、回転・方向・決定操作だけでWebブラウザへ移動。スマホで指定済みの7100番が開き、実際の映像の進行を確認。既存メニューの `Full screen` を選ぶとURL欄とFermataバーが消え、アプリ領域全画面で映像が継続した。Android Autoのドックは残る。自動起動・自動全画面の成功を示すものではない。
 - 初回はADB導入（installer=null / initiating=com.android.shell）。同一署名・同一ハッシュのAPKを既存Shizuku/KingInstallerでデータを保持して更新した後は、installer / initiatingとも `com.google.android.packageinstaller`。Playストア扱いにはならなかった。既存6a版Fermataと同じ導入元になっても動画用項目は出ず、Android Autoプロセス再起動・DHU再接続後も同じ結果。
-- ログの `Uses for TEMPLATE not defined` は既存Fermataにも出るため、試作版だけが出ない原因の証明にはならない。アプリID・署名・Android Autoの認識条件は未切り分け。導入元だけを原因と断定しない。
-- 短時間再生を終了し、試験アプリのプロセスなしを確認。DHU・所有するTCP 54010転送・ヘッドユニットサーバー・一時起動したShizukuを終了。画面消灯設定は元の値15へ復旧。KingInstallerのShizukuスイッチも元のオフへ復旧。Android Auto開発者モードと元からオンだった提供元不明アプリは保持し、後者のchecked=trueを再確認した。
-- 証跡はGit対象外の `dist/dhu-smoke/`。スマホ映像は `phone-video-{1,2}.png`、DHU音声UIは `dhu-prototype-media-open.png`、更新後一覧は `aa-restart-launcher-middle.xml`、導入元は `prototype-after-king-package.txt`、後片付けは `cleanup.json`。
+- ログの `Uses for TEMPLATE not defined` は既存Fermataにも出るため、試作版だけが出ない原因の証明にはならない。通常一覧に出ない理由と実車での認識条件は未切り分け。導入元だけを原因と断定しない。
+- 短時間再生を終了し、試験アプリのプロセスなしを確認。DHU・所有するTCP 54010/65515転送・ヘッドユニットサーバー・一時起動したShizukuを終了。画面消灯設定は元の値15へ復旧。KingInstallerのShizukuスイッチも元のオフへ復旧。Android Auto開発者モードと元からオンだった提供元不明アプリは保持し、後者のchecked=trueを再確認した。アプリモードは追加試験で「デベロッパー」に設定し、その選択状態をUIで確認して実車チェック用に保持。変更前のダイアログは4項目すべて未選択だった。
+- 証跡はGit対象外の `dist/dhu-smoke/`。スマホ映像は `phone-video-{1,2}.png`、診断一覧は `dhu-all-car-apps-fermata.png`、試作CarServiceは `allcar-launch-services.txt`、DHU映像は `dhu-video-{1,2}.png`、全画面は `dhu-komenotv-fullscreen.png` / `dhu-fullscreen-video-2.png`、最終モードは `aa-final-mode.xml`、後片付けは `cleanup-final.json`。
 
 ## ビルド
 
@@ -27,5 +28,5 @@
 
 ## 次の段階
 
-独立アプリの動画用CarServiceがAndroid Autoに認識される条件を先に切り分ける。現在の試作は実車チェックへ進める状態とは判定しない。既存Fermataの置換・削除、共通公開鍵への変更、Android Autoのデータ消去は行っていない。
-認識が成立してから、ユーザーが停車中のCX-5で一覧表示・起動を確認する。その判定後に7100番の固定起動と、アプリ起動/復帰時の全画面化を実装する。家庭用7000・車載7100のWeb版・配信サーバーは変更不要。Android Autoのドックはアプリ領域の全画面とは別。
+ユーザーが停車中のCX-5で、6aの「すべての車両アプリ」→「KomenoTV Auto」から起動できるか確認する。DHUの診断一覧経由の成功は、通常一覧や実車での認識を保証しない。通常一覧へ出ない条件も未解決。既存Fermataの置換・削除、共通公開鍵への変更、Android Autoのデータ消去は行っていない。
+実車での起動が成立してから7100番の固定起動と、アプリ起動/復帰時の全画面化を実装する。家庭用7000・車載7100のWeb版・配信サーバーは変更不要。Android Autoのドックはアプリ領域の全画面とは別。
